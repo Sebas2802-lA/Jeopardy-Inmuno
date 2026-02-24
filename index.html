@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Jeopardy Científico</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #001f3f;
+    color: white;
+    text-align: center;
+    margin: 0;
+}
+
+h1 {
+    padding: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    width: 95%;
+    margin: auto;
+}
+
+.category {
+    font-weight: bold;
+    padding: 15px;
+    font-size: 18px;
+}
+
+.cell {
+    padding: 25px;
+    font-size: 22px;
+    cursor: pointer;
+    border: 2px solid white;
+    transition: 0.3s;
+}
+
+.cell:hover {
+    opacity: 0.8;
+}
+
+.used {
+    background-color: #555 !important;
+    cursor: not-allowed;
+}
+
+/* Colores por columna */
+.col1 { background-color: #1abc9c; }
+.col2 { background-color: #3498db; }
+.col3 { background-color: #9b59b6; }
+.col4 { background-color: #e67e22; }
+.col5 { background-color: #e74c3c; }
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.modal-content {
+    background: white;
+    color: black;
+    margin: 10% auto;
+    padding: 30px;
+    width: 60%;
+    border-radius: 10px;
+    font-size: 22px;
+}
+
+.close {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎯 Jeopardy Científico</h1>
+
+<div class="board">
+
+<div class="category col1">Epidemiología</div>
+<div class="category col2">Genética</div>
+<div class="category col3">Redes</div>
+<div class="category col4">Enf. Tropicales</div>
+<div class="category col5">Bio. Sintética</div>
+
+<!-- FILA 1 -->
+<div class="cell col1" onclick="mostrar('e1', this)">100</div>
+<div class="cell col2" onclick="mostrar('g1', this)">100</div>
+<div class="cell col3" onclick="mostrar('r1', this)">100</div>
+<div class="cell col4" onclick="mostrar('t1', this)">100</div>
+<div class="cell col5" onclick="mostrar('b1', this)">100</div>
+
+<!-- FILA 2 -->
+<div class="cell col1" onclick="mostrar('e2', this)">200</div>
+<div class="cell col2" onclick="mostrar('g2', this)">200</div>
+<div class="cell col3" onclick="mostrar('r2', this)">200</div>
+<div class="cell col4" onclick="mostrar('t2', this)">200</div>
+<div class="cell col5" onclick="mostrar('b2', this)">200</div>
+
+<!-- FILA 3 -->
+<div class="cell col1" onclick="mostrar('e3', this)">300</div>
+<div class="cell col2" onclick="mostrar('g3', this)">300</div>
+<div class="cell col3" onclick="mostrar('r3', this)">300</div>
+<div class="cell col4" onclick="mostrar('t3', this)">300</div>
+<div class="cell col5" onclick="mostrar('b3', this)">300</div>
+
+<!-- FILA 4 -->
+<div class="cell col1" onclick="mostrar('e4', this)">400</div>
+<div class="cell col2" onclick="mostrar('g4', this)">400</div>
+<div class="cell col3" onclick="mostrar('r4', this)">400</div>
+<div class="cell col4" onclick="mostrar('t4', this)">400</div>
+<div class="cell col5" onclick="mostrar('b4', this)">400</div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="cerrar()">&times;</span>
+    <p id="pregunta"></p>
+  </div>
+</div>
+
+<script>
+const preguntas = {
+
+e1: "Es el número promedio de casos secundarios producidos por un infectado. ¿Qué es R₀?",
+e2: "Modelo que incluye pérdida de inmunidad. ¿Qué es SIRS?",
+e3: "Unidad estándar de vigilancia sanitaria. ¿Qué es la semana epidemiológica?",
+e4: "Proporción de infectados en un momento dado. ¿Qué es prevalencia?",
+
+g1: "Molécula que almacena información genética. ¿Qué es ADN?",
+g2: "Proceso ADN → ARN. ¿Qué es transcripción?",
+g3: "Cambio permanente en el ADN. ¿Qué es mutación?",
+g4: "Segmento que codifica un producto funcional. ¿Qué es un gen?",
+
+r1: "Elementos básicos de una red. ¿Qué son nodos?",
+r2: "Número de conexiones de un nodo. ¿Qué es grado?",
+r3: "Medida de puente entre nodos. ¿Qué es betweenness?",
+r4: "Grupo densamente conectado. ¿Qué es comunidad?",
+
+t1: "Enfermedad causada por Leishmania. ¿Qué es leishmaniasis?",
+t2: "Vector del dengue. ¿Qué es Aedes aegypti?",
+t3: "Causada por Trypanosoma cruzi. ¿Qué es Chagas?",
+t4: "Malaria más letal. ¿Qué es Plasmodium falciparum?",
+
+b1: "Campo que diseña sistemas biológicos. ¿Qué es biología sintética?",
+b2: "Dispositivo genético detector. ¿Qué es biosensor?",
+b3: "Moléculas reguladoras del ADN. ¿Qué son factores de transcripción?",
+b4: "Edición genética guiada por ARN. ¿Qué es CRISPR-Cas9?"
+
+};
+
+function mostrar(id, elemento) {
+    if (elemento.classList.contains("used")) return;
+    document.getElementById("pregunta").innerText = preguntas[id];
+    document.getElementById("modal").style.display = "block";
+    elemento.classList.add("used");
+}
+
+function cerrar() {
+    document.getElementById("modal").style.display = "none";
+}
+</script>
+
+</body>
+</html>
