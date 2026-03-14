@@ -2,178 +2,97 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Jeopardy Científico</title>
-
+<title>Jeopardy Naty & Tato</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background-color: #001f3f;
-    color: white;
-    text-align: center;
-    margin: 0;
-}
-
-h1 {
-    padding: 20px;
-}
-
-.board {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    width: 95%;
-    margin: auto;
-}
-
-.category {
-    font-weight: bold;
-    padding: 15px;
-    font-size: 18px;
-}
-
-.cell {
-    padding: 25px;
-    font-size: 22px;
-    cursor: pointer;
-    border: 2px solid white;
-    transition: 0.3s;
-}
-
-.cell:hover {
-    opacity: 0.8;
-}
-
-.used {
-    background-color: #555 !important;
-    cursor: not-allowed;
-}
-
-/* Colores por columna */
-.col1 { background-color: #1abc9c; }
-.col2 { background-color: #3498db; }
-.col3 { background-color: #9b59b6; }
-.col4 { background-color: #e67e22; }
-.col5 { background-color: #e74c3c; }
-
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.8);
-}
-
-.modal-content {
-    background: white;
-    color: black;
-    margin: 10% auto;
-    padding: 30px;
-    width: 60%;
-    border-radius: 10px;
-    font-size: 22px;
-}
-
-.close {
-    float: right;
-    font-size: 28px;
-    cursor: pointer;
-}
+body { font-family: Arial, sans-serif; background-color: #001f3f; color: white; text-align: center; margin: 0; }
+h1 { padding: 20px; }
+.board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 95%; margin: auto; }
+.category { font-weight: bold; padding: 15px; font-size: 18px; border-radius: 8px; }
+.cell { padding: 25px; font-size: 22px; cursor: pointer; border-radius: 8px; transition: 0.2s; color: white; }
+.cell:hover:not(.used) { opacity: 0.8; transform: scale(1.03); }
+.used { opacity: 0.2 !important; cursor: not-allowed; }
+.col1 { background-color: #534AB7; }
+.col2 { background-color: #0F6E56; }
+.col3 { background-color: #993C1D; }
+.col4 { background-color: #854F0B; }
+.modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
+.modal-content { background: white; color: black; margin: 10% auto; padding: 30px; width: 60%; border-radius: 10px; font-size: 22px; }
+.close { float: right; font-size: 28px; cursor: pointer; }
+.pts-label { font-size: 14px; color: #888; margin-bottom: 8px; }
 </style>
 </head>
-
 <body>
-
-<h1>🎯 Jeopardy Científico</h1>
-
+<h1>🎉 Jeopardy Naty & Tato</h1>
 <div class="board">
 
-<div class="category col1">Epidemiología</div>
-<div class="category col2">Genética</div>
-<div class="category col3">Redes</div>
-<div class="category col4">Enf. Tropicales</div>
-<div class="category col5">Bio. Sintética</div>
+  <div class="category col1">Naty</div>
+  <div class="category col2">Tato</div>
+  <div class="category col3">Ambos</div>
+  <div class="category col4">Bonus</div>
 
-<!-- FILA 1 -->
-<div class="cell col1" onclick="mostrar('e1', this)">100</div>
-<div class="cell col2" onclick="mostrar('g1', this)">100</div>
-<div class="cell col3" onclick="mostrar('r1', this)">100</div>
-<div class="cell col4" onclick="mostrar('t1', this)">100</div>
-<div class="cell col5" onclick="mostrar('b1', this)">100</div>
+  <div class="cell col1" onclick="mostrar('n1', this)">100</div>
+  <div class="cell col2" onclick="mostrar('t1', this)">100</div>
+  <div class="cell col3" onclick="mostrar('a1', this)">100</div>
+  <div class="cell col4" onclick="mostrar('b1', this)">100</div>
 
-<!-- FILA 2 -->
-<div class="cell col1" onclick="mostrar('e2', this)">200</div>
-<div class="cell col2" onclick="mostrar('g2', this)">200</div>
-<div class="cell col3" onclick="mostrar('r2', this)">200</div>
-<div class="cell col4" onclick="mostrar('t2', this)">200</div>
-<div class="cell col5" onclick="mostrar('b2', this)">200</div>
+  <div class="cell col1" onclick="mostrar('n2', this)">200</div>
+  <div class="cell col2" onclick="mostrar('t2', this)">200</div>
+  <div class="cell col3" onclick="mostrar('a2', this)">200</div>
+  <div class="cell col4" onclick="mostrar('b2', this)">200</div>
 
-<!-- FILA 3 -->
-<div class="cell col1" onclick="mostrar('e3', this)">300</div>
-<div class="cell col2" onclick="mostrar('g3', this)">300</div>
-<div class="cell col3" onclick="mostrar('r3', this)">300</div>
-<div class="cell col4" onclick="mostrar('t3', this)">300</div>
-<div class="cell col5" onclick="mostrar('b3', this)">300</div>
+  <div class="cell col1" onclick="mostrar('n3', this)">300</div>
+  <div class="cell col2" onclick="mostrar('t3', this)">300</div>
+  <div class="cell col3" onclick="mostrar('a3', this)">300</div>
+  <div class="cell col4" onclick="mostrar('b3', this)">300</div>
 
-<!-- FILA 4 -->
-<div class="cell col1" onclick="mostrar('e4', this)">400</div>
-<div class="cell col2" onclick="mostrar('g4', this)">400</div>
-<div class="cell col3" onclick="mostrar('r4', this)">400</div>
-<div class="cell col4" onclick="mostrar('t4', this)">400</div>
-<div class="cell col5" onclick="mostrar('b4', this)">400</div>
+  <div class="cell col1" onclick="mostrar('n4', this)">400</div>
+  <div class="cell col2" onclick="mostrar('t4', this)">400</div>
+  <div class="cell col3" onclick="mostrar('a4', this)">400</div>
+  <div class="cell col4" onclick="mostrar('b4', this)">400</div>
 
 </div>
 
-<!-- MODAL -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <span class="close" onclick="cerrar()">&times;</span>
+    <p class="pts-label" id="pts-label"></p>
     <p id="pregunta"></p>
   </div>
 </div>
 
 <script>
 const preguntas = {
-
-e1: "Es el número promedio de casos secundarios producidos por un infectado. ¿Qué es R₀?",
-e2: "Modelo que incluye pérdida de inmunidad. ¿Qué es SIRS?",
-e3: "Unidad estándar de vigilancia sanitaria. ¿Qué es la semana epidemiológica?",
-e4: "Proporción de infectados en un momento dado. ¿Qué es prevalencia?",
-
-g1: "Molécula que almacena información genética. ¿Qué es ADN?",
-g2: "Proceso ADN → ARN. ¿Qué es transcripción?",
-g3: "Cambio permanente en el ADN. ¿Qué es mutación?",
-g4: "Segmento que codifica un producto funcional. ¿Qué es un gen?",
-
-r1: "Elementos básicos de una red. ¿Qué son nodos?",
-r2: "Número de conexiones de un nodo. ¿Qué es grado?",
-r3: "Medida de puente entre nodos. ¿Qué es betweenness?",
-r4: "Grupo densamente conectado. ¿Qué es comunidad?",
-
-t1: "Enfermedad causada por Leishmania. ¿Qué es leishmaniasis?",
-t2: "Vector del dengue. ¿Qué es Aedes aegypti?",
-t3: "Causada por Trypanosoma cruzi. ¿Qué es Chagas?",
-t4: "Malaria más letal. ¿Qué es Plasmodium falciparum?",
-
-b1: "Campo que diseña sistemas biológicos. ¿Qué es biología sintética?",
-b2: "Dispositivo genético detector. ¿Qué es biosensor?",
-b3: "Moléculas reguladoras del ADN. ¿Qué son factores de transcripción?",
-b4: "Edición genética guiada por ARN. ¿Qué es CRISPR-Cas9?"
-
+  n1: "¿Qué profesor fue crush de Naty?",
+  n2: "¿Cuál fue su peor chuma?",
+  n3: "Di 3 conciertos a los que fue Naty (¡No vale decir Taylor!)",
+  n4: "Di los nombres de 2 de los perros y 2 de los gatos de Naty",
+  t1: "¿Cómo le llaman los amigos del colegio a Tato?",
+  t2: "Cuando Tato era pequeño, ¿qué quería ser de grande?",
+  t3: "Nombra los 2 equipos favoritos de Tato",
+  t4: "¿A qué le tiene miedo Tato?",
+  a1: "¿Cuál fue la comida del cumpleaños Tato-Naty del año anterior?",
+  a2: "¿Cómo le llama Tato a Naty?",
+  a3: "¿Cuál es la canción de Naty y Tato?\n\nOpciones: Calma · Piel · Espresso · I Knew You Were Trouble",
+  a4: "¿Cómo se hicieron amigos?",
+  b1: "¿Serie o película favorita?",
+  b2: "¿Drink favorita?",
+  b3: "¿Ingrediente favorito para pizza?",
+  b4: "¿A qué ciudad se mudarían (Tato) o les gustaría visitar (Naty)?"
 };
 
+const pts = { n1:100,n2:200,n3:300,n4:400,t1:100,t2:200,t3:300,t4:400,a1:100,a2:200,a3:300,a4:400,b1:100,b2:200,b3:300,b4:400 };
+
 function mostrar(id, elemento) {
-    if (elemento.classList.contains("used")) return;
-    document.getElementById("pregunta").innerText = preguntas[id];
-    document.getElementById("modal").style.display = "block";
-    elemento.classList.add("used");
+  if (elemento.classList.contains("used")) return;
+  document.getElementById("pts-label").innerText = pts[id] + " puntos";
+  document.getElementById("pregunta").innerText = preguntas[id];
+  document.getElementById("modal").style.display = "block";
+  elemento.classList.add("used");
 }
 
 function cerrar() {
-    document.getElementById("modal").style.display = "none";
+  document.getElementById("modal").style.display = "none";
 }
 </script>
-
 </body>
 </html>
