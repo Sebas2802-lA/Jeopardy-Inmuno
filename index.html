@@ -4,95 +4,234 @@
 <meta charset="UTF-8">
 <title>Jeopardy Naty & Tato</title>
 <style>
-body { font-family: Arial, sans-serif; background-color: #001f3f; color: white; text-align: center; margin: 0; }
-h1 { padding: 20px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background-color: #001f3f; color: white; }
+h1 { text-align: center; font-size: 24px; padding: 1rem 0; }
+
+.scoreboard { display: flex; gap: 12px; justify-content: center; margin-bottom: 1rem; }
+.score-card { background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.3); border-radius: 12px; padding: 10px 20px; text-align: center; min-width: 140px; }
+.score-name input { background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.4); color: white; font-size: 14px; font-weight: bold; text-align: center; width: 110px; outline: none; }
+.score-pts { font-size: 28px; font-weight: bold; color: white; margin: 4px 0; }
+.score-btns { display: flex; gap: 6px; justify-content: center; margin-top: 6px; }
+.score-btns button { border: none; border-radius: 6px; padding: 3px 10px; cursor: pointer; font-size: 13px; font-weight: bold; }
+.btn-plus { background: #2ecc71; color: white; }
+.btn-minus { background: #e74c3c; color: white; }
+
 .board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; width: 95%; margin: auto; }
-.category { font-weight: bold; padding: 15px; font-size: 18px; border-radius: 8px; }
-.cell { padding: 25px; font-size: 22px; cursor: pointer; border-radius: 8px; transition: 0.2s; color: white; }
-.cell:hover:not(.used) { opacity: 0.8; transform: scale(1.03); }
-.used { opacity: 0.2 !important; cursor: not-allowed; }
+.cat-header { padding: 14px 8px; font-size: 15px; font-weight: bold; text-align: center; border-radius: 8px; color: white; }
+.cell { padding: 22px 8px; font-size: 22px; font-weight: bold; text-align: center; cursor: pointer; border-radius: 8px; color: white; transition: transform 0.15s, opacity 0.15s; }
+.cell:hover:not(.used) { transform: scale(1.05); opacity: 0.85; }
+.used { opacity: 0.15 !important; cursor: not-allowed; transform: none !important; }
 .col1 { background-color: #534AB7; }
 .col2 { background-color: #0F6E56; }
 .col3 { background-color: #993C1D; }
 .col4 { background-color: #854F0B; }
-.modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); }
-.modal-content { background: white; color: black; margin: 10% auto; padding: 30px; width: 60%; border-radius: 10px; font-size: 22px; }
-.close { float: right; font-size: 28px; cursor: pointer; }
-.pts-label { font-size: 14px; color: #888; margin-bottom: 8px; }
+
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10; align-items: center; justify-content: center; }
+.overlay.active { display: flex; }
+.modal-box { background: white; color: black; border-radius: 16px; padding: 2rem; max-width: 500px; width: 92%; text-align: center; animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.modal-pts { font-size: 13px; color: #888; margin-bottom: 4px; }
+.modal-cat { font-size: 13px; font-weight: bold; color: #534AB7; margin-bottom: 12px; }
+.modal-q { font-size: 21px; font-weight: bold; color: #111; margin-bottom: 1.5rem; line-height: 1.4; white-space: pre-line; }
+.timer-bar-wrap { background: #eee; border-radius: 99px; height: 10px; margin-bottom: 1.2rem; overflow: hidden; }
+.timer-bar { height: 10px; border-radius: 99px; background: #2ecc71; width: 100%; }
+.modal-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.modal-actions button { padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: bold; }
+.btn-correct { background: #2ecc71; color: white; }
+.btn-skip { background: #bbb; color: white; }
 </style>
 </head>
 <body>
+
 <h1>🎉 Jeopardy Naty & Tato</h1>
-<div class="board">
 
-  <div class="category col1">Naty</div>
-  <div class="category col2">Tato</div>
-  <div class="category col3">Ambos</div>
-  <div class="category col4">Bonus</div>
-
-  <div class="cell col1" onclick="mostrar('n1', this)">100</div>
-  <div class="cell col2" onclick="mostrar('t1', this)">100</div>
-  <div class="cell col3" onclick="mostrar('a1', this)">100</div>
-  <div class="cell col4" onclick="mostrar('b1', this)">100</div>
-
-  <div class="cell col1" onclick="mostrar('n2', this)">200</div>
-  <div class="cell col2" onclick="mostrar('t2', this)">200</div>
-  <div class="cell col3" onclick="mostrar('a2', this)">200</div>
-  <div class="cell col4" onclick="mostrar('b2', this)">200</div>
-
-  <div class="cell col1" onclick="mostrar('n3', this)">300</div>
-  <div class="cell col2" onclick="mostrar('t3', this)">300</div>
-  <div class="cell col3" onclick="mostrar('a3', this)">300</div>
-  <div class="cell col4" onclick="mostrar('b3', this)">300</div>
-
-  <div class="cell col1" onclick="mostrar('n4', this)">400</div>
-  <div class="cell col2" onclick="mostrar('t4', this)">400</div>
-  <div class="cell col3" onclick="mostrar('a4', this)">400</div>
-  <div class="cell col4" onclick="mostrar('b4', this)">400</div>
-
+<div class="scoreboard">
+  <div class="score-card">
+    <div class="score-name"><input id="name0" value="Equipo 1" /></div>
+    <div class="score-pts" id="pts0">0</div>
+    <div class="score-btns">
+      <button class="btn-plus" onclick="addPts(0,1)">+</button>
+      <button class="btn-minus" onclick="addPts(0,-1)">−</button>
+    </div>
+  </div>
+  <div class="score-card">
+    <div class="score-name"><input id="name1" value="Equipo 2" /></div>
+    <div class="score-pts" id="pts1">0</div>
+    <div class="score-btns">
+      <button class="btn-plus" onclick="addPts(1,1)">+</button>
+      <button class="btn-minus" onclick="addPts(1,-1)">−</button>
+    </div>
+  </div>
 </div>
 
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="cerrar()">&times;</span>
-    <p class="pts-label" id="pts-label"></p>
-    <p id="pregunta"></p>
+<div class="board" id="board"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal-box">
+    <div class="modal-pts" id="m-pts"></div>
+    <div class="modal-cat" id="m-cat"></div>
+    <div class="modal-q" id="m-q"></div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="timer-bar"></div></div>
+    <div class="modal-actions">
+      <button class="btn-correct" onclick="award(0)">✅ <span id="n0">Equipo 1</span></button>
+      <button class="btn-correct" onclick="award(1)">✅ <span id="n1">Equipo 2</span></button>
+      <button class="btn-skip" onclick="closeModal()">⏭ Saltar</button>
+    </div>
   </div>
 </div>
 
 <script>
-const preguntas = {
-  n1: "¿Qué profesor fue crush de Naty?",
-  n2: "¿Cuál fue su peor chuma?",
-  n3: "Di 3 conciertos a los que fue Naty (¡No vale decir Taylor!)",
-  n4: "Di los nombres de 2 de los perros y 2 de los gatos de Naty",
-  t1: "¿Cómo le llaman los amigos del colegio a Tato?",
-  t2: "Cuando Tato era pequeño, ¿qué quería ser de grande?",
-  t3: "Nombra los 2 equipos favoritos de Tato",
-  t4: "¿A qué le tiene miedo Tato?",
-  a1: "¿Cuál fue la comida del cumpleaños Tato-Naty del año anterior?",
-  a2: "¿Cómo le llama Tato a Naty?",
-  a3: "¿Cuál es la canción de Naty y Tato?\n\nOpciones: Calma · Piel · Espresso · I Knew You Were Trouble",
-  a4: "¿Cómo se hicieron amigos?",
-  b1: "¿Serie o película favorita?",
-  b2: "¿Drink favorita?",
-  b3: "¿Ingrediente favorito para pizza?",
-  b4: "¿A qué ciudad se mudarían (Tato) o les gustaría visitar (Naty)?"
+const cats = [
+  { name: "Naty", cls: "col1" },
+  { name: "Tato", cls: "col2" },
+  { name: "Ambos", cls: "col3" },
+  { name: "Bonus", cls: "col4" }
+];
+
+const questions = {
+  naty: [
+    { pts: 100, q: "¿Qué profesor fue crush de Naty?" },
+    { pts: 200, q: "¿Cuál fue su peor chuma?" },
+    { pts: 300, q: "Di 3 conciertos a los que fue Naty\n(¡No vale decir Taylor!)" },
+    { pts: 400, q: "Di los nombres de 2 de los perros y 2 de los gatos de Naty" }
+  ],
+  tato: [
+    { pts: 100, q: "¿Cómo le llaman los amigos del colegio a Tato?" },
+    { pts: 200, q: "Cuando Tato era pequeño, ¿qué quería ser de grande?" },
+    { pts: 300, q: "Nombra los 2 equipos favoritos de Tato" },
+    { pts: 400, q: "¿A qué le tiene miedo Tato?" }
+  ],
+  ambos: [
+    { pts: 100, q: "¿Cuál fue la comida del cumpleaños Tato-Naty del año anterior?" },
+    { pts: 200, q: "¿Cómo le llama Tato a Naty?" },
+    { pts: 300, q: "¿Cuál es la canción de Naty y Tato?\n\nOpciones: Calma · Piel · Espresso · I Knew You Were Trouble" },
+    { pts: 400, q: "¿Cómo se hicieron amigos?" }
+  ],
+  bonus: [
+    { pts: 100, q: "¿Serie o película favorita?" },
+    { pts: 200, q: "¿Drink favorita?" },
+    { pts: 300, q: "¿Ingrediente favorito para pizza?" },
+    { pts: 400, q: "¿A qué ciudad se mudarían (Tato) o les gustaría visitar (Naty)?" }
+  ]
 };
 
-const pts = { n1:100,n2:200,n3:300,n4:400,t1:100,t2:200,t3:300,t4:400,a1:100,a2:200,a3:300,a4:400,b1:100,b2:200,b3:300,b4:400 };
+const keys = ["naty","tato","ambos","bonus"];
+const scores = [0, 0];
+let currentPts = 0;
+let timerInterval = null;
 
-function mostrar(id, elemento) {
-  if (elemento.classList.contains("used")) return;
-  document.getElementById("pts-label").innerText = pts[id] + " puntos";
-  document.getElementById("pregunta").innerText = preguntas[id];
-  document.getElementById("modal").style.display = "block";
-  elemento.classList.add("used");
+const board = document.getElementById("board");
+cats.forEach((cat, ci) => {
+  const h = document.createElement("div");
+  h.className = `cat-header ${cat.cls}`;
+  h.textContent = cat.name;
+  board.appendChild(h);
+});
+
+for (let row = 0; row < 4; row++) {
+  keys.forEach((key, ci) => {
+    const q = questions[key][row];
+    const cell = document.createElement("div");
+    cell.className = `cell ${cats[ci].cls}`;
+    cell.textContent = q.pts;
+    cell.addEventListener("click", function() {
+      if (this.classList.contains("used")) return;
+      this.classList.add("used");
+      openModal(cats[ci].name, q.pts, q.q);
+    });
+    board.appendChild(cell);
+  });
 }
 
-function cerrar() {
-  document.getElementById("modal").style.display = "none";
+function addPts(team, dir) {
+  scores[team] += currentPts * dir || 100 * dir;
+  if (scores[team] < 0) scores[team] = 0;
+  document.getElementById("pts" + team).textContent = scores[team];
 }
+
+function openModal(cat, pts, q) {
+  currentPts = pts;
+  document.getElementById("m-pts").textContent = pts + " puntos";
+  document.getElementById("m-cat").textContent = cat;
+  document.getElementById("m-q").textContent = q;
+  document.getElementById("n0").textContent = document.getElementById("name0").value || "Equipo 1";
+  document.getElementById("n1").textContent = document.getElementById("name1").value || "Equipo 2";
+  document.getElementById("overlay").classList.add("active");
+  playSound("open");
+  startTimer(30);
+}
+
+function award(team) {
+  scores[team] += currentPts;
+  document.getElementById("pts" + team).textContent = scores[team];
+  playSound("correct");
+  closeModal();
+}
+
+function closeModal() {
+  clearInterval(timerInterval);
+  document.getElementById("overlay").classList.remove("active");
+  const bar = document.getElementById("timer-bar");
+  bar.style.transition = "none";
+  bar.style.width = "100%";
+  bar.style.background = "#2ecc71";
+}
+
+function startTimer(secs) {
+  clearInterval(timerInterval);
+  const bar = document.getElementById("timer-bar");
+  bar.style.transition = "none";
+  bar.style.width = "100%";
+  bar.style.background = "#2ecc71";
+  let remaining = secs;
+  setTimeout(() => {
+    timerInterval = setInterval(() => {
+      remaining--;
+      const pct = (remaining / secs) * 100;
+      bar.style.transition = "width 1s linear, background 0.5s";
+      bar.style.width = pct + "%";
+      if (pct < 40) bar.style.background = "#e74c3c";
+      else if (pct < 70) bar.style.background = "#f39c12";
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        playSound("timeup");
+      }
+    }, 1000);
+  }, 50);
+}
+
+const audioCtx = typeof AudioContext !== "undefined" ? new AudioContext() : null;
+function playSound(type) {
+  if (!audioCtx) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.connect(g); g.connect(audioCtx.destination);
+  if (type === "open") {
+    o.frequency.setValueAtTime(523, audioCtx.currentTime);
+    o.frequency.setValueAtTime(659, audioCtx.currentTime + 0.1);
+    o.frequency.setValueAtTime(784, audioCtx.currentTime + 0.2);
+    g.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+    o.start(); o.stop(audioCtx.currentTime + 0.5);
+  } else if (type === "correct") {
+    o.frequency.setValueAtTime(784, audioCtx.currentTime);
+    o.frequency.setValueAtTime(1047, audioCtx.currentTime + 0.15);
+    g.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+    o.start(); o.stop(audioCtx.currentTime + 0.4);
+  } else if (type === "timeup") {
+    o.type = "sawtooth";
+    o.frequency.setValueAtTime(200, audioCtx.currentTime);
+    g.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+    o.start(); o.stop(audioCtx.currentTime + 0.6);
+  }
+}
+
+document.getElementById("overlay").addEventListener("click", function(e) {
+  if (e.target === this) closeModal();
+});
 </script>
 </body>
 </html>
